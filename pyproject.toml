@@ -1,0 +1,72 @@
+[tool.poetry]
+name = "python-urlinformer"
+version = "0.1.0"
+description = "A simple python tool to check the status of a URL"
+authors = ["Tim Bryant <timothybryant3@gmail.com>"]
+readme = "README.md"
+packages = [{include = "src", from = "."}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+pyyaml = "^6.0.1"
+requests = "^2.26.0"
+yamale = "^4.0.4"
+
+[tool.poetry.group.dev.dependencies]
+autopep8 = "^2.0.2"
+pytest = "^7.2.2"
+black = "^23.3.0"
+pre-commit = "^3.3.3"
+pytest-mock = "^3.11.1"
+coverage = "^7.2.7"
+isort = "^5.12.0"
+sourcery = "^1.11.0"
+
+[tool.poetry.group.tooling.dependencies]
+pip-tools = "^7.1.0"
+doit = "^0.36.0"
+python-semantic-release = "^8.0.7"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+pythonpath = [
+  ".", "src"
+]
+
+# [tool.poetry.scripts]
+# psi = "src.main:cli"
+
+# [tool.semantic_release.commit_parser_options]
+# allowed_tags = [
+#     "build",
+#     "chore",
+#     "refactor",
+#     "fix",
+#     "perf",
+#     "style",
+#     "docs",
+#     "ci",
+#     "test",
+#     "feat",
+#     ":boom:",
+#     "BREAKING_CHANGE",
+# ]
+# major_tags = [":boom:", "BREAKING_CHANGE"]
+# minor_tags = ["feat"]
+# patch_tags = ["fix", "perf", "style", "docs", "ci", "test"]
+
+# [tool.semantic_release]
+# version_toml = [
+#     "pyproject.toml:tool.poetry.version",
+# ]
+# branch = "main"
+# changelog_file = "CHANGELOG.md"
+# build_command = "poetry build"
+# dist_path = "dist/"
+# upload_to_vcs_release = true
+# upload_to_pypi = false
+# remove_dist = false
+# patch_without_tag = true

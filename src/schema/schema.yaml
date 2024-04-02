@@ -1,0 +1,7 @@
+list(include('check'), min=1, max=100)
+---
+check:
+  name: str()
+  url: str()
+  retries: int(min=1, max=5)
+  status_accepted: list(int(min=200, max=599))
