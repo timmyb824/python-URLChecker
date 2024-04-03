@@ -54,10 +54,11 @@ jobs:
           poetry run python -m pytest -xvvv tests/
 
       - name: Start application
+        shell: bash
         run: |
           # Start the application in the background
           pwd
-          poetry run python -m src/main.py &
+          poetry run python src/main.py &
           APP_PID=$!
 
           # Allow the application some time to start
