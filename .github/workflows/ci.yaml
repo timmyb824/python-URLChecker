@@ -56,6 +56,7 @@ jobs:
       - name: Start application
         run: |
           # Start the application in the background
+          pwd
           poetry run python -m src/main.py &
           APP_PID=$!
 
