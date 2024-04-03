@@ -56,11 +56,11 @@ jobs:
       - name: Start application
         run: |
           # Start the application in the background
-          python src/main.py &
+          poetry run python -m src/main.py &
           APP_PID=$!
 
           # Allow the application some time to start
-          sleep 5 
+          sleep 5
 
           # Check that the application is running
           if ps -p $APP_PID > /dev/null
@@ -73,7 +73,7 @@ jobs:
 
           # Shut down the application
           kill $APP_PID
-    
+
   # Docker-Publish:
   #   needs: Test
   #   environment:
