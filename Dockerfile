@@ -25,7 +25,6 @@ ENV VIRTUAL_ENV=/app/.venv \
 COPY --from=builder ${VIRTUAL_ENV} ${VIRTUAL_ENV}
 
 COPY src ./app/src
-COPY checks.yaml ./app/checks.yaml
 
 WORKDIR /app
 

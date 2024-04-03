@@ -7,3 +7,6 @@ SCHEMA_PATH = "src/schema/schema.yaml"
 DISCORD_WEBHOOK_URL = os.getenv("DISCORD_WEBHOOK_URL")
 TIME_BETWEEN_INITIAL_CHECKS = 5
 TIME_BETWEEN_SCHEDULED_CHECKS = 30
+ROOT_DIR = os.path.realpath(
+    os.path.join(os.path.dirname(__file__), "../../.")
+)  # project root
