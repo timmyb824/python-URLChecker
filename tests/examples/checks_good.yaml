@@ -1,0 +1,12 @@
+---
+- name: ansible-semaphore
+  url: https://semaphore.timmybtech.com
+  retries: 3
+  status_accepted:
+    - 200
+
+- name: code-server
+  url: https://code-server.timmybtech.com
+  retries: 2
+  status_accepted:
+    - 200
