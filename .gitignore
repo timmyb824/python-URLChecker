@@ -1,5 +1,6 @@
 ARCHIVE/
 .envrc
+.env
 __pycache__/
 status.yaml
 checks.yaml
