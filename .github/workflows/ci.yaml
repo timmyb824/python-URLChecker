@@ -70,7 +70,7 @@ jobs:
           APP_PID=$!
 
           # Allow the application some time to start
-          sleep 5
+          sleep 15
 
           # Check that the application is running
           if ps -p $APP_PID > /dev/null
