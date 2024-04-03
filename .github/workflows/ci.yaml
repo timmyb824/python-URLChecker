@@ -53,11 +53,19 @@ jobs:
         run: |
           poetry run python -m pytest -xvvv tests/
 
+      - name: Create checks.yaml file
+        shell: bash
+        run: |
+          echo "- name: test check" >> checks.yaml
+          echo "  url: https://github.com >> checks.yaml
+          echo "  retries: 1 >> checks.yaml
+          echo "  status_accepted:" >> checks.yaml
+          echo "    - 200" >> checks.yaml
+
       - name: Start application
         shell: bash
         run: |
           # Start the application in the background
-          pwd
           poetry run python src/main.py &
           APP_PID=$!
 
