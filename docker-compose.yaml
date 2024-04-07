@@ -9,4 +9,6 @@ services:
         volumes:
             - './checks.yaml:/app/checks.yaml'
         environment:
-            - DISCORD_WEBHOOK_URL=${DISCORD_WEBHOOK_URL}
+            - APPRISE_DISCORD=${APPRISE_DISCORD}
+            - APPRISE_GOTIFY=${APPRISE_GOTIFY}
+           # - TIME_BETWEEN_SCHEDULED_CHECKS=${TIME_BETWEEN_SCHEDULED_CHECKS} # Optional: default is 60 seconds

@@ -3,16 +3,15 @@ import sys
 
 import aiohttp
 
-from config.constants import (
+from config.file_handler import load_status, read_config
+from config.validate import validate_yaml_file
+from constants import (
     CONFIG_PATH,
-    DISCORD_WEBHOOK_URL,
     SCHEMA_PATH,
     STATUS_FILE,
     TIME_BETWEEN_INITIAL_CHECKS,
     TIME_BETWEEN_SCHEDULED_CHECKS,
 )
-from config.file_handler import load_status, read_config
-from config.validate import validate_yaml_file
 from core.url_checks import check_url_status
 from logs.log_handler import logger
 
@@ -31,9 +30,7 @@ async def main() -> None:
 
     if not config:
         logger.error("No configuration found. Exiting...")
-        return
-
-    webhook_url = DISCORD_WEBHOOK_URL or ""
+        sys.exit(1)
 
     status_dict = load_status(status_file)
 
@@ -42,17 +39,13 @@ async def main() -> None:
         for check in config:
             url = check["url"]
             if url not in status_dict:
-                await check_url_status(
-                    session, check, webhook_url, status_file, status_dict
-                )
+                await check_url_status(session, check, status_file, status_dict)
 
         await asyncio.sleep(TIME_BETWEEN_INITIAL_CHECKS)
 
         while True:
             for check in config:
-                await check_url_status(
-                    session, check, webhook_url, status_file, status_dict
-                )
+                await check_url_status(session, check, status_file, status_dict)
             await asyncio.sleep(TIME_BETWEEN_SCHEDULED_CHECKS)
 
 

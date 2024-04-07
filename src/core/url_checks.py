@@ -5,17 +5,16 @@ from aiohttp import ClientTimeout
 
 from config.file_handler import save_status
 from logs.log_handler import logger
-from notifications.discord import send_discord_notification
+from notifications.send_notification import send_notification_async
 
 
 async def check_url_status(
     session: aiohttp.ClientSession,
     check: dict[str, Any],
-    webhook_url: str,
     status_file: str,
     status_dict: dict[str, dict[str, Any]],
 ) -> None:
-    """Check the status of a URL and update the status dictionary asynchronously"""
+    """Updated check_url_status function to use send_notification with Apprise."""
     url = check["url"]
     status_accepted = check["status_accepted"]
     url_status = status_dict.get(url, {"status": "unknown", "retries": 0})
@@ -23,24 +22,22 @@ async def check_url_status(
 
     try:
         async with session.get(url, timeout=ClientTimeout(total=15)) as response:
-            print(f"URL: {url} - Status Code: {response.status}")
+            logger.info(f"URL: {url} - Status Code: {response.status}")
             if response.status in status_accepted:
                 if url_status["status"] == "down":
-                    await send_discord_notification(
-                        session, webhook_url, f"Recovery: {url} is back up."
+                    await send_notification_async(
+                        f"Recovery: {url} is back up. (from apprise)"
                     )
                 status_dict[url] = {"status": "up", "retries": 0}
             else:
-                logger.info(f"{url} returned status code {response.status}")
+                logger.error(f"{url} returned status code {response.status}")
                 url_status["retries"] += 1
                 status_dict[url] = url_status
 
                 if url_status["retries"] >= retries_limit:
                     if url_status["status"] != "down":
-                        await send_discord_notification(
-                            session,
-                            webhook_url,
-                            f"Alert: {url} is down after {retries_limit} retries.",
+                        await send_notification_async(
+                            f"Alert: {url} is down after {retries_limit} retries."
                         )
                     status_dict[url] = {"status": "down", "retries": 0}
     except Exception as e:
@@ -50,10 +47,8 @@ async def check_url_status(
 
         if url_status["retries"] >= retries_limit:
             if url_status["status"] != "down":
-                await send_discord_notification(
-                    session,
-                    webhook_url,
-                    f"Alert: {url} is down after {retries_limit} retries.",
+                await send_notification_async(
+                    f"Alert: {url} is down after {retries_limit} retries."
                 )
             status_dict[url] = {"status": "down", "retries": 0}
 

@@ -10,6 +10,7 @@ ENV POETRY_NO_INTERACTION=1 \
 WORKDIR /app
 
 COPY pyproject.toml poetry.lock ./
+
 # poetry complains if README.md is not present (there are build benefits to create empty one instead of copying the real one)
 RUN touch README.md
 
