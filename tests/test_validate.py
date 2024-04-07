@@ -1,7 +1,7 @@
 import os
 
-from src.config.constants import ROOT_DIR
 from src.config.validate import validate_yaml_file
+from src.constants import ROOT_DIR
 
 
 def test_validate_yaml_file():
