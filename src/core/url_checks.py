@@ -15,6 +15,7 @@ async def check_url_status(
     status_dict: dict[str, dict[str, Any]],
 ) -> None:
     """Updated check_url_status function to use send_notification with Apprise."""
+    name = check["name"]
     url = check["url"]
     status_accepted = check["status_accepted"]
     url_status = status_dict.get(url, {"status": "unknown", "retries": 0})
@@ -22,12 +23,10 @@ async def check_url_status(
 
     try:
         async with session.get(url, timeout=ClientTimeout(total=15)) as response:
-            logger.info(f"URL: {url} - Status Code: {response.status}")
+            logger.info(f"Result for: {name} - {url} -- {response.status}")
             if response.status in status_accepted:
                 if url_status["status"] == "down":
-                    await send_notification_async(
-                        f"Recovery: {url} is back up. (from apprise)"
-                    )
+                    await send_notification_async(f"Recovery: {url} is back up.")
                 status_dict[url] = {"status": "up", "retries": 0}
             else:
                 logger.error(f"{url} returned status code {response.status}")
