@@ -1,4 +1,4 @@
-# python-UrlChecker
+# python-URLChecker
 
 This is a simple python tool that checks the status of a list of URLs and send a notification if any of the URLs are down based on the status code.
 
@@ -62,4 +62,4 @@ To keep track of the status of the URLs, the tool saves the status of the URLs t
 
 There are many tools out there that do the same thing. This tool was created to be simple and easy to use. I have a homelab where I run a bunch of services and I just wanted a simple tool to check the status of internal URLs and send me a notification if any of the URLs are down. This tool is not meant to be a replacement for more robust monitoring tools like [Uptime-Kuma](https://github.com/louislam/uptime-kuma) or [Monika](https://monika.hyperjump.tech/) to name a few.
 
-Please note, I am not a professional software developer and this tool my have bugs or imperfections. If you find any issues or have suggestions, please feel free to open an issue or submit a pull request.
+Please note, this tool my have bugs or imperfections. If you find any issues or have suggestions, please feel free to open an issue or submit a pull request.
