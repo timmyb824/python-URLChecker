@@ -24,7 +24,7 @@ First, create a `checks.yaml` file somewhere on your server. This file will cont
 
 Next, create a `docker-compose.yaml` file with the following content:
 
-```bash
+```yaml
 ---
 services:
     urlchecker:
