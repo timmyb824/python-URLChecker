@@ -6,6 +6,7 @@ services:
             context: .
             dockerfile: Dockerfile
         container_name: urlchecker
+        network_mode: host
         volumes:
             - './checks.yaml:/app/checks.yaml'
         environment:
