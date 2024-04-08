@@ -41,12 +41,12 @@ async def main() -> None:
             if url not in status_dict:
                 await check_url_status(session, check, status_file, status_dict)
 
-        await asyncio.sleep(TIME_BETWEEN_INITIAL_CHECKS)
+        await asyncio.sleep(float(TIME_BETWEEN_INITIAL_CHECKS))
 
         while True:
             for check in config:
                 await check_url_status(session, check, status_file, status_dict)
-            await asyncio.sleep(TIME_BETWEEN_SCHEDULED_CHECKS)
+            await asyncio.sleep(float(TIME_BETWEEN_SCHEDULED_CHECKS))
 
 
 if __name__ == "__main__":
