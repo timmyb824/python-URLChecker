@@ -7,3 +7,4 @@ checks.yaml
 ppi.log
 .venv/
 .python-version
+docker-compose.local.yaml

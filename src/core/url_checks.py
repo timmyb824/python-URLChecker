@@ -14,7 +14,7 @@ async def check_url_status(
     status_file: str,
     status_dict: dict[str, dict[str, Any]],
 ) -> None:
-    """Updated check_url_status function to use send_notification with Apprise."""
+    """Check status of each URL and send Apprise notification if down."""
     name = check["name"]
     url = check["url"]
     status_accepted = check["status_accepted"]

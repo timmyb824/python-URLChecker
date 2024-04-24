@@ -10,7 +10,6 @@ def validate_yaml_file(schema: str, config: str) -> bool:
     Parameters:
     schema (str): The file path to the schema YAML.
     config (str): The file path to the config YAML.
-    job (Job): The job object to update job status.
 
     Returns:
     bool: True if the YAML is valid, False otherwise.
