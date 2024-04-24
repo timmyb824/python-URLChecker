@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "python-urlinformer"
+name = "python-urlchecker"
 version = "0.1.0"
 description = "A simple python tool to check the status of a URL"
 authors = ["Tim Bryant <timothybryant3@gmail.com>"]
