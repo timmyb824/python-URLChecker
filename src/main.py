@@ -7,6 +7,7 @@ from config.file_handler import load_status, read_config
 from config.validate import validate_yaml_file
 from constants import (
     CONFIG_PATH,
+    HEALTHCHECKS_URL,
     SCHEMA_PATH,
     STATUS_FILE,
     TIME_BETWEEN_INITIAL_CHECKS,
@@ -14,6 +15,19 @@ from constants import (
 )
 from core.url_checks import check_url_status
 from logs.log_handler import logger
+
+
+async def send_health_check(session: aiohttp.ClientSession, url: str) -> None:
+    """Send a health check signal to the healthchecks.io endpoint."""
+    try:
+        async with session.get(url, timeout=10) as response:
+            if response.status != 200:
+                logger.error(
+                    f"Failed to send health check signal. Status code: {response.status}"
+                )
+            logger.info(f"Health check signal sent to {url}")
+    except aiohttp.ClientError as e:
+        logger.error(f"Failed to send health check signal. Exception: {e}")
 
 
 async def main() -> None:
@@ -46,6 +60,10 @@ async def main() -> None:
         while True:
             for check in config:
                 await check_url_status(session, check, status_file, status_dict)
+
+            if HEALTHCHECKS_URL:
+                await send_health_check(session, HEALTHCHECKS_URL)
+
             await asyncio.sleep(float(TIME_BETWEEN_SCHEDULED_CHECKS))
 
 
