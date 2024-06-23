@@ -20,7 +20,7 @@ from logs.log_handler import logger
 async def send_health_check(session: aiohttp.ClientSession, url: str) -> None:
     """Send a health check signal to the healthchecks.io endpoint."""
     try:
-        async with session.get(url, timeout=10) as response:
+        async with session.get(url, timeout=5) as response:
             if response.status != 200:
                 logger.error(
                     f"Failed to send health check signal. Status code: {response.status}"
@@ -28,6 +28,8 @@ async def send_health_check(session: aiohttp.ClientSession, url: str) -> None:
             logger.info(f"Health check signal sent to {url}")
     except aiohttp.ClientError as e:
         logger.error(f"Failed to send health check signal. Exception: {e}")
+    except asyncio.TimeoutError:
+        logger.error("Timeout occurred while sending health check signal.")
 
 
 async def main() -> None:
