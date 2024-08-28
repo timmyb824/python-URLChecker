@@ -39,8 +39,10 @@ async def main() -> None:
     status_file = STATUS_FILE
     config_path = CONFIG_PATH
     schema_path = SCHEMA_PATH
-    uptime_gauge = Gauge("url_uptime", "URL uptime status", ["url"])
-    check_counter = Counter("url_checks_total", "Total number of URL checks", ["url"])
+    uptime_gauge = Gauge("url_uptime", "URL uptime status", ["url", "name"])
+    check_counter = Counter(
+        "url_checks_total", "Total number of URL checks", ["url", "name"]
+    )
 
     logger.info("Starting Prometheus server...")
     start_http_server(PROMETHEUS_PORT)
