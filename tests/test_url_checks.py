@@ -2,8 +2,20 @@ from unittest.mock import AsyncMock, patch
 
 import pytest
 from aiohttp import ClientSession, ClientTimeout
+from prometheus_client import CollectorRegistry, Counter, Gauge
 
 from src.core.url_checks import check_url_status
+
+
+@pytest.fixture(scope="function")
+def prometheus_metrics():
+    registry = CollectorRegistry()
+    uptime_gauge = Gauge("url_uptime", "URL uptime status", ["url"], registry=registry)
+    check_counter = Counter(
+        "url_checks_total", "Total number of URL checks", ["url"], registry=registry
+    )
+    return uptime_gauge, check_counter
+
 
 # Sample data for tests
 test_data = [
@@ -79,6 +91,7 @@ async def test_check_url_status(
     mock_logger,
     mock_send_notification_async,
     mock_save_status,
+    prometheus_metrics,
     check,
     status_dict,
     status_file,
@@ -88,6 +101,7 @@ async def test_check_url_status(
 ):
     # Arrange
     session = AsyncMock(spec=ClientSession)
+    uptime_gauge, check_counter = prometheus_metrics
     mock_response = AsyncMock()
     session.get.return_value.__aenter__.return_value = mock_response
     mock_response.status = response_status
@@ -95,7 +109,9 @@ async def test_check_url_status(
         session.get.side_effect = exception
 
     # Act
-    await check_url_status(session, check, status_file, status_dict)
+    await check_url_status(
+        session, check, status_file, status_dict, uptime_gauge, check_counter
+    )
 
     # Assert
     mock_save_status.assert_called_once_with(status_dict, status_file)

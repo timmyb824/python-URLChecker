@@ -1,6 +1,6 @@
 # python-URLChecker
 
-This is a simple python tool that checks the status of a list of URLs and send a notification if any of the URLs are down based on the status code.
+This is a simple python tool that checks the status of a list of URLs and sends a notification if any of the URLs are down based on the status code.
 
 ## Usage
 
@@ -37,10 +37,11 @@ services:
       # - APPRISE_DISCORD=${APPRISE_DISCORD}
       # - APPRISE_GOTIFY=${APPRISE_GOTIFY}
       # - TIME_BETWEEN_SCHEDULED_CHECKS=${TIME_BETWEEN_SCHEDULED_CHECKS} # Optional: default is 60 seconds
+      # - PROMETHEUS_ENDPOINT=${PROMETHEUS_ENDPOINT} # Optional: default is 8000
     restart: unless-stopped
 ```
 
-You'll notice that there are some environment variables that are commented out. Youll want to setup at least one notification service. The tool usees [Apprise](https://github.com/caronc/apprise) to send notifications. You can use any of the [supported notification services](https://github.com/caronc/apprise#supported-notifications). The only requirement is that the environment variable must be in the format `APPRISE_<SERVICE_NAME>`. For example, to setup a Discord notification, you would set the `APPRISE_DISCORD` environment variable to your Discord webhook URL. You can have multiple notification services setup by adding more environment variables.
+You'll notice that there are some environment variables that are commented out. You'll want to setup at least one notification service. The tool usees [Apprise](https://github.com/caronc/apprise) to send notifications. You can use any of the [supported notification services](https://github.com/caronc/apprise#supported-notifications). The only requirement is that the environment variable must be in the format `APPRISE_<SERVICE_NAME>`. For example, to setup a Discord notification, you would set the `APPRISE_DISCORD` environment variable to your Discord webhook URL. You can have multiple notification services setup by adding more environment variables.
 
 Finally, run the following command to start the container:
 
@@ -58,6 +59,10 @@ Example output:
 ```
 
 To keep track of the status of the URLs, the tool saves the status of the URLs to a `status.yaml` file. This file is used to determine if a notification should be sent based on the number of retries specified in the `checks.yaml` file.
+
+### Metrics
+
+Prometheus metrics are available at the `/metrics` endpoint on port 8000. You may change the port number using the PROMETHEUS_ENDPOINT env. See the [Prometheus documentation](https://prometheus.io) for more information.
 
 ## Final Notes
 
