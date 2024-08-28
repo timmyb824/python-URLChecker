@@ -1,0 +1,17 @@
+---
+services:
+  urlchecker:
+    #    image: docker.io/timmyb824/python-urlchecker:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: urlchecker
+    network_mode: host
+    volumes:
+      - "./checks.yaml:/app/checks.yaml" # update the path to your checks.yaml file
+    environment:
+      # - APPRISE_DISCORD=${APPRISE_DISCORD}
+      # - APPRISE_GOTIFY=${APPRISE_GOTIFY}
+      # - TIME_BETWEEN_SCHEDULED_CHECKS=${TIME_BETWEEN_SCHEDULED_CHECKS} # Optional: default is 60 seconds
+      # - HEALTHCHECKS_URL=${HEALTHCHECK_URL} # Optional
+    restart: unless-stopped
