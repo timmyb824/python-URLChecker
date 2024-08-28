@@ -10,9 +10,14 @@ from src.core.url_checks import check_url_status
 @pytest.fixture(scope="function")
 def prometheus_metrics():
     registry = CollectorRegistry()
-    uptime_gauge = Gauge("url_uptime", "URL uptime status", ["url"], registry=registry)
+    uptime_gauge = Gauge(
+        "url_uptime", "URL uptime status", ["url", "name"], registry=registry
+    )
     check_counter = Counter(
-        "url_checks_total", "Total number of URL checks", ["url"], registry=registry
+        "url_checks_total",
+        "Total number of URL checks",
+        ["url", "name"],
+        registry=registry,
     )
     return uptime_gauge, check_counter
 
