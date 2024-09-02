@@ -2,7 +2,7 @@ import asyncio
 import sys
 
 import aiohttp
-from prometheus_client import Counter, Gauge, start_http_server
+from prometheus_client import Counter, Gauge, Histogram, start_http_server
 
 from config.file_handler import load_status, read_config
 from config.validate import validate_yaml_file
@@ -43,9 +43,14 @@ async def main() -> None:
     check_counter = Counter(
         "url_checks_total", "Total number of URL checks", ["url", "name"]
     )
+    response_time = Histogram(
+        "url_response_time_milliseconds",
+        "Response time in milliseconds",
+        ["url", "name"],
+    )
 
     logger.info("Starting Prometheus server...")
-    start_http_server(PROMETHEUS_PORT)
+    start_http_server(PROMETHEUS_PORT)  # type: ignore
 
     if not validate_yaml_file(schema_path, config_path):
         logger.error("Invalid configuration. Exiting...")
@@ -72,6 +77,7 @@ async def main() -> None:
                     status_dict,
                     uptime_gauge,
                     check_counter,
+                    response_time,
                 )
 
         await asyncio.sleep(float(TIME_BETWEEN_INITIAL_CHECKS))
@@ -85,6 +91,7 @@ async def main() -> None:
                     status_dict,
                     uptime_gauge,
                     check_counter,
+                    response_time,
                 )
 
             if HEALTHCHECKS_URL:

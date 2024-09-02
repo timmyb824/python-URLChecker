@@ -1,8 +1,9 @@
+import time
 from typing import Any
 
 import aiohttp
 from aiohttp import ClientTimeout
-from prometheus_client import Counter, Gauge
+from prometheus_client import Counter, Gauge, Histogram
 
 from config.file_handler import save_status
 from logs.log_handler import logger
@@ -19,6 +20,7 @@ async def check_url_status(
     status_dict: dict[str, dict[str, Any]],
     uptime_gauge: Gauge,
     check_counter: Counter,
+    response_time: Histogram,
 ) -> None:
     """Check status of each URL and send Apprise notification if down."""
     name = check["name"]
@@ -30,8 +32,15 @@ async def check_url_status(
     check_counter.labels(url=url, name=name).inc()
 
     try:
+        start_time = time.perf_counter()
         async with session.get(url, timeout=ClientTimeout(total=15)) as response:
-            logger.info(f"Result for: {name} - {url} -- {response.status}")
+            end_time = time.perf_counter()
+            duration_ms = (end_time - start_time) * 1000
+            response_time.labels(url=url, name=name).observe(duration_ms)
+
+            logger.info(
+                f"Result for: {name} - {url} -- {response.status} (Response time: {duration_ms:.2f}ms)"
+            )
             if response.status in status_accepted:
                 if url_status["status"] == "down":
                     await send_notification_async(f"Recovery: {url} is back up.")
@@ -50,7 +59,11 @@ async def check_url_status(
                     status_dict[url] = {"status": "down", "retries": 0}
                     uptime_gauge.labels(url=url, name=name).set(0)  # URL is down
     except Exception as e:
-        logger.error(f"Error checking {url}: {e}")
+        end_time = time.perf_counter()
+        duration_ms = (end_time - start_time) * 1000
+        response_time.labels(url=url, name=name).observe(duration_ms)
+
+        logger.error(f"Error checking {url}: {e} (Response time: {duration_ms:.2f}ms)")
         url_status["retries"] += 1
         status_dict[url] = url_status
 
