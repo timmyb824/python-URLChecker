@@ -2,7 +2,7 @@ from unittest.mock import AsyncMock, patch
 
 import pytest
 from aiohttp import ClientSession, ClientTimeout
-from prometheus_client import CollectorRegistry, Counter, Gauge
+from prometheus_client import CollectorRegistry, Counter, Gauge, Histogram
 
 from src.core.url_checks import check_url_status
 
@@ -19,7 +19,13 @@ def prometheus_metrics():
         ["url", "name"],
         registry=registry,
     )
-    return uptime_gauge, check_counter
+    response_time = Histogram(
+        "url_response_time_milliseconds",
+        "Response time in milliseconds",
+        ["url", "name"],
+        registry=registry,
+    )
+    return uptime_gauge, check_counter, response_time
 
 
 # Sample data for tests
@@ -106,7 +112,7 @@ async def test_check_url_status(
 ):
     # Arrange
     session = AsyncMock(spec=ClientSession)
-    uptime_gauge, check_counter = prometheus_metrics
+    uptime_gauge, check_counter, response_time = prometheus_metrics
     mock_response = AsyncMock()
     session.get.return_value.__aenter__.return_value = mock_response
     mock_response.status = response_status
@@ -115,7 +121,13 @@ async def test_check_url_status(
 
     # Act
     await check_url_status(
-        session, check, status_file, status_dict, uptime_gauge, check_counter
+        session,
+        check,
+        status_file,
+        status_dict,
+        uptime_gauge,
+        check_counter,
+        response_time,
     )
 
     # Assert
