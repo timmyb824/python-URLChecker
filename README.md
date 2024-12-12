@@ -1,3 +1,5 @@
+> **Note:** For users interested in a more advanced version of this project, check out [timmyb824/python-urlpinger](https://github.com/timmyb824/python-URLPinger.git). This project features a re-write that adds database storage, additional configuration parameters, and more.
+
 # python-URLChecker
 
 This is a simple python tool that checks the status of a list of URLs and sends a notification if any of the URLs are down based on the status code.
